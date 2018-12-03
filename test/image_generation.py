@@ -7,7 +7,6 @@
 ################################
 ################################
 
-
 import tkinter as tk
 from random import *
 from PIL import Image, ImageDraw
