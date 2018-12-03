@@ -38,12 +38,12 @@ def point(event):
     print(event.char)
     if event.char=='s':
         global start_point
-        start_point = mouse.Controller().position
-        startLbl.config(text=mouse.Controller().position)
+        start_point = mouse.Controller().position #현재의 마우스 위치를 시작포인트로 지정
+        startLbl.config(text=mouse.Controller().position) #label 바꿔줌
     if event.char == 'e':
         global end_point
-        end_point = mouse.Controller().position
-        endLbl.config(text=mouse.Controller().position)
+        end_point = mouse.Controller().position #현재의 마우스 위치를 끝포인트로 지정
+        endLbl.config(text=mouse.Controller().position) #라벨 바꿔줌
 
 ################################
 # 함수명    : screenshot
@@ -54,9 +54,9 @@ def point(event):
 ################################
 
 def screenshot():
-    if not take_shot:
+    if not take_shot: # 정지 버튼을 눌렀을 때
         return
-    imgGrab = ImageGrab.grab(bbox=(*start_point,*end_point))
+    imgGrab = ImageGrab.grab(bbox=(*start_point,*end_point)) #이미지 캡쳐
     imgGrab.save("screen_shot.jpg")
 
     print("o")
@@ -100,7 +100,7 @@ canvas.focus_set() #canvas를 활성화 시켜줌
 lbl0 = tk.Label(root, text="시작 좌표 -> press s")
 lbl0.pack()
 
-startLbl = tk.Label(root, text=start_point)
+startLbl = tk.Label(root, text=" ")
 startLbl.pack()
 
 lbl1 = tk.Label(root, text="끝 좌표 -> press e")
