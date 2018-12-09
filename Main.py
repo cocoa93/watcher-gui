@@ -17,6 +17,8 @@ def main():
     image = cv2.imread("screen_shot.jpg")
     # cv2.line(image, (427, 0), (427, 50), (255, 0, 0), 2)
     #cv2.imshow("pcroom", image)
+    totalSeatNum=0
+    emptySeatNum=0
 
     #json 파일 만들기 위한 dictionary
     dic_for_json = {}
@@ -118,6 +120,10 @@ def main():
             print(roi_matrix)
             for mat in roi_matrix:
                 f.write("%d " % mat)
+                if mat!=0:
+                    totalSeatNum+=1
+                    if mat==1:
+                        emptySeatNum+=1
             f.write("\n")
 
             seats.append({"x": db_x, "y": db_y, "list": roi_matrix})
@@ -126,4 +132,6 @@ def main():
 
     #json_convert함수에 dictionary 넘겨줌
     dic_for_json["seats"] = seats
+    dic_for_json["total_seats"] = totalSeatNum
+    dic_for_json["empty_seats"] = emptySeatNum
     json_convert(dic_for_json)

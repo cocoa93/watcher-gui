@@ -17,7 +17,10 @@ import tkinter as tk #gui
 from PIL import ImageGrab #이미지 캡쳐
 from Main import main
 import time #파이썬 기본라이브러리
+import json
+import logger
 
+log = logger.myLog('mylog.log')
 
 #tkinter root 윈도우 생성
 
@@ -61,10 +64,26 @@ def screenshot():
     if not take_shot: # 정지 버튼을 눌렀을 때
         return
     imgGrab = ImageGrab.grab(bbox=(*start_point,*end_point)) #이미지 캡쳐
-    imgGrab.save("screen_shot.jpg")
-
+    imgGrab.save("screen_shot.png")
+    imgGrab.resize((300,150)).save("thumbnail.png")
+    thumbnailImg.config(file="thumbnail.png")
+    thumbnailLbl.config(image=thumbnailImg)
     print("o")
-    main()
+    try:
+        main()
+    except Exception:
+        log.error("unexpected error in main function")
+
+    fo = open("pc_info.json")
+    json_info = json.load(fo)
+    fo.close()
+
+    if json_info["empty_seats"]==0:
+        log.warning("no seats detected")
+    else:
+        log.info("json file generated")
+
+    emptySeatsLbl.config(text="빈좌석:"+ str(json_info["empty_seats"]))
     root.after(5000,screenshot)
 
 ################################
@@ -76,6 +95,8 @@ def screenshot():
 ################################
 
 def start():
+    if start_point==() or end_point==():
+        return;
     global take_shot
     take_shot = True
     processLbl.config(text="시작")
@@ -95,31 +116,41 @@ def stop():
     take_shot = False
     processLbl.config(text="멈춤")
 
+image_canvas = tk.Canvas(root) #root 창 안에 canvas를 하나 더 생성해줌
+image_canvas.pack()
 
 canvas = tk.Canvas(root) #root 창 안에 canvas를 하나 더 생성해줌
 canvas.pack(expand=True)
 canvas.bind('<Key>', point) #key보드와 point함수를 bind해줌
 canvas.focus_set() #canvas를 활성화 시켜줌
 
-lbl0 = tk.Label(root, text="시작 좌표 -> press s")
+thumbnailImg = tk.PhotoImage()
+thumbnailLbl = tk.Label(image_canvas,image=thumbnailImg)
+thumbnailLbl.pack()
+thumbnailLbl.place(x=50,y=50)
+
+emptySeatsLbl = tk.Label(canvas,text="빈좌석:0")
+emptySeatsLbl.pack()
+
+lbl0 = tk.Label(canvas, text="시작 좌표 -> press s")
 lbl0.pack()
 
-startLbl = tk.Label(root, text=" ")
+startLbl = tk.Label(canvas, text=" ")
 startLbl.pack()
 
-lbl1 = tk.Label(root, text="끝 좌표 -> press e")
+lbl1 = tk.Label(canvas, text="끝 좌표 -> press e")
 lbl1.pack()
 
-endLbl = tk.Label(root, text=" ")
+endLbl = tk.Label(canvas, text=" ")
 endLbl.pack()
 
-processLbl = tk.Label(root, text="멈춤")
+processLbl = tk.Label(canvas, text="멈춤")
 processLbl.pack()
 
-start_btn = tk.Button(root, text="START", width=15, command=start)
+start_btn = tk.Button(canvas, text="START", width=15, command=start)
 start_btn.pack()
 
-end_btn = tk.Button(root, text="END", width=15, command=stop)
+end_btn = tk.Button(canvas, text="END", width=15, command=stop)
 end_btn.pack()
 
 root.mainloop()
