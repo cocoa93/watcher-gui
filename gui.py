@@ -46,11 +46,11 @@ def point(event):
     if event.char=='s':
         global start_point
         start_point = mouse.Controller().position #현재의 마우스 위치를 시작포인트로 지정
-        startLbl.config(text=mouse.Controller().position) #label 바꿔줌
+        startpoint_Lbl.config(text=mouse.Controller().position) #label 바꿔줌
     if event.char == 'e':
         global end_point
         end_point = mouse.Controller().position #현재의 마우스 위치를 끝포인트로 지정
-        endLbl.config(text=mouse.Controller().position) #라벨 바꿔줌
+        endpoint_Lbl.config(text=mouse.Controller().position) #라벨 바꿔줌
 
 ################################
 # 함수명    : screenshot
@@ -83,7 +83,7 @@ def screenshot():
     else:
         log.info("json file generated")
 
-    emptySeatsLbl.config(text="빈좌석:"+ str(json_info["empty_seats"]))
+    emptySeats_Lbl.config(text="빈좌석:" + str(json_info["empty_seats"]))
     root.after(5000,screenshot)
 
 ################################
@@ -99,7 +99,7 @@ def start():
         return;
     global take_shot
     take_shot = True
-    processLbl.config(text="시작")
+    processState_Lbl.config(text="시작")
     time.sleep(5)
     screenshot()
 
@@ -114,7 +114,7 @@ def start():
 def stop():
     global take_shot
     take_shot = False
-    processLbl.config(text="멈춤")
+    processState_Lbl.config(text="멈춤")
 
 image_canvas = tk.Canvas(root) #root 창 안에 canvas를 하나 더 생성해줌
 image_canvas.pack()
@@ -129,23 +129,23 @@ thumbnailLbl = tk.Label(image_canvas,image=thumbnailImg)
 thumbnailLbl.pack()
 thumbnailLbl.place(x=50,y=50)
 
-emptySeatsLbl = tk.Label(canvas,text="빈좌석:0")
-emptySeatsLbl.pack()
+emptySeats_Lbl = tk.Label(canvas, text="빈좌석:0")
+emptySeats_Lbl.pack()
 
-lbl0 = tk.Label(canvas, text="시작 좌표 -> press s")
-lbl0.pack()
+startGuide_Lbl = tk.Label(canvas, text="시작 좌표 -> press s")
+startGuide_Lbl.pack()
 
-startLbl = tk.Label(canvas, text=" ")
-startLbl.pack()
+startpoint_Lbl = tk.Label(canvas, text=" ")
+startpoint_Lbl.pack()
 
-lbl1 = tk.Label(canvas, text="끝 좌표 -> press e")
-lbl1.pack()
+endGuide_Lbl = tk.Label(canvas, text="끝 좌표 -> press e")
+endGuide_Lbl.pack()
 
-endLbl = tk.Label(canvas, text=" ")
-endLbl.pack()
+endpoint_Lbl = tk.Label(canvas, text=" ")
+endpoint_Lbl.pack()
 
-processLbl = tk.Label(canvas, text="멈춤")
-processLbl.pack()
+processState_Lbl = tk.Label(canvas, text="멈춤")
+processState_Lbl.pack()
 
 start_btn = tk.Button(canvas, text="START", width=15, command=start)
 start_btn.pack()
